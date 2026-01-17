@@ -5,18 +5,24 @@ import authRoutes from './routes/auth.route.js'
 
 dotenv.config()
 
-
-
-
-const app  = express();
+const app = express();
 
 app.use(express.json())
 
+app.use('/api/auth', authRoutes)
 
-app.use('/api/auth',authRoutes)
-
-app.listen(process.env.PORT , () =>{
-
-    console.log('Server is ruuning on PORT:',process.env.PORT)
-    coonectionDb();
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'ok' })
 })
+
+// For local development only
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 5000
+    app.listen(PORT, () => {
+        console.log('Server is running on PORT:', PORT)
+        coonectionDb();
+    })
+}
+
+export default app

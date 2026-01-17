@@ -1,16 +1,10 @@
-import express from 'express';
-import dotenv from 'dotenv';
+import app from '../backend/server.js';
 import { coonectionDb } from '../backend/db/connectDB.js';
-import authRoutes from '../backend/routes/auth.route.js';
 
-dotenv.config();
+// Initialize database connection for serverless
+if (process.env.NODE_ENV === 'production') {
+    coonectionDb();
+}
 
-const app = express();
-
-app.use(express.json());
-app.use('/api/auth', authRoutes);
-
-// Connection to database
-coonectionDb();
-
+// Export for Vercel serverless functions
 export default app;
