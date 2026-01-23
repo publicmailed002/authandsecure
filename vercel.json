@@ -1,5 +1,7 @@
 {
   "version": 2,
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/dist",
   "builds": [
     {
       "src": "frontend/package.json",
@@ -22,6 +24,7 @@
     }
   ],
   "env": {
-    "NODE_ENV": "production"
+    "NODE_ENV": "production",
+    "VITE_API_URL": "@vite_api_url"
   }
 }
