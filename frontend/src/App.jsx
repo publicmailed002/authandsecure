@@ -7,6 +7,9 @@ import EmailVerificationPage from './pages/EmailVerificationPage'
 import { Toaster } from 'react-hot-toast'
 import { useAuthStore } from './store/useAuthStore'
 import DashboardPage from './pages/DashboardPage'
+import LoadingSpainer from './components/LoadingSpainer'
+import ForgetPasswordPAge from './pages/ForgetPasswordPAge'
+import ResetPasswordPage from './pages/ResetPasswordPage'
 
 
 
@@ -48,6 +51,8 @@ function App() {
     useEffect(()=>{
         checkAuth()
     },[checkAuth])
+
+    if(isCheckingAuth) return <LoadingSpainer />
   return (
     <>
       <div className='min-h-screen bg-linear-to-br from-gray-900 via-green-900 to-emerald-900 flex items-center justify-center relative overflow-hidden'>
@@ -60,6 +65,15 @@ function App() {
            <Route  path='/signup' element={<RedirectAuthentictedUsers><SignUpPage/></RedirectAuthentictedUsers>} />
            <Route  path='/login' element={<RedirectAuthentictedUsers><LoginPage/></RedirectAuthentictedUsers>} />
            <Route  path='/verify-email' element={<EmailVerificationPage/>} />
+           <Route  path='/forget-password' element={<RedirectAuthentictedUsers><ForgetPasswordPAge/></RedirectAuthentictedUsers>} />
+           <Route
+					path='/reset-password/:token'
+					element={
+						<RedirectAuthentictedUsers>
+							<ResetPasswordPage />
+						</RedirectAuthentictedUsers>
+					}
+				/>
 
         </Routes>
         <Toaster/>

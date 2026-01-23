@@ -9,6 +9,7 @@ export const useAuthStore = create((set) => ({
      error:null,
      isLoading: false,
      isCheckingAuth: true,
+     message: null,
 
      signup : async (email , password  , fullName) =>{
         set({isLoading:true ,error:null});
@@ -24,6 +25,27 @@ export const useAuthStore = create((set) => ({
             throw error;
             
         }
+     },
+     login: async (email,password) =>{
+       set({isLoading:true ,error:null});
+       try {
+           const response = await axios.post(`${BAS_URL}/login` ,{email,password});
+           set({isAuthenticated:true,user:response.data.user ,error:null,isLoading:false})
+       } catch (error) {
+        set({error:error.response?.data?.message || "Error login" ,isLoading:false})
+        throw error;
+        
+       }
+     },
+     logout: async () =>{
+        set({isLoading:true,error:null})
+         try {
+             await axios.post(`${BAS_URL}/logout`);
+             set({user:null ,isAuthenticated:false ,error:null ,isLoading:false});
+         } catch (error) {
+             set({error:'Error in logout' ,isLoading:false});
+             throw error;
+         }
      },
      verifyEmail : async (code) =>{
 
@@ -50,5 +72,34 @@ export const useAuthStore = create((set) => ({
             
         }
 
-     }
+     },
+     forgetPaswword :async (email)=>{
+        set({isLoading:true ,error:null ,message:null})
+        try {
+            const  response = await axios.post(`${BAS_URL}/forget-password`,{email})
+            set({message:response.data.message ,isLoading:false})
+        } catch (error) {
+            set({
+                isLoading:false,
+                error:error.response?.data?.message || 'Error sending reset password email'
+            })
+            throw error;
+            
+        }
+
+     },
+     resetPassword: async (token, password) => {
+		set({ isLoading: true, error: null });
+		try {
+			const response = await axios.post(`${BAS_URL}/reset-password/${token}`, { password });
+			set({ message: response.data.message, isLoading: false });
+		} catch (error) {
+			set({
+				isLoading: false,
+				error: error.response.data.message || "Error resetting password",
+			});
+			throw error;
+		}
+	},
+     
 }));
